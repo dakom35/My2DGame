@@ -47,6 +47,7 @@ class Game
         void pollEvents();
         void update(); 
         void render(); 
+        void updateMousePositions();
 
 };
 
