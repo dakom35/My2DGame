@@ -12,7 +12,20 @@ void Game::initWindow()
     this->videoMode.height = 600 ; 
     this->videoMode.width = 800 ; 
     this->window = new sf::RenderWindow(this->videoMode, "Game 2", sf::Style::Titlebar | sf::Style::Close);
+    this->window->setFramerateLimit(60); //max_fps
 
+}
+
+void Game::initEnemies()
+{
+    float Xpos = 200;
+    float Ypos = 250 ;
+    this->enemy.setPosition(Xpos,Ypos);
+    this->enemy.setSize(sf::Vector2f(100.f,100.f));
+    this->enemy.setScale(sf::Vector2f(0.6f,0.4f));
+    this->enemy.setFillColor(sf::Color::Cyan); 
+    this->enemy.setOutlineColor(sf::Color::Green);
+    this->enemy.setOutlineThickness(5.f);
 }
 
 
@@ -22,6 +35,7 @@ Game::Game()
 {
     this->initVariables() ; // call order is important here
     this->initWindow();
+    this->initEnemies();
 }
 
 Game::~Game()
@@ -61,6 +75,15 @@ void Game::pollEvents()
 void Game::update()
 {
     this->pollEvents(); 
+
+    //update mouse position
+    // Relative to the screen
+    //std::cout << "Mouse pos: " << sf::Mouse::getPosition().x << " " << sf::Mouse::getPosition().y << "\n" ; 
+    // Relative to the game's window
+    std::cout << "Mouse pos: " << sf::Mouse::getPosition(*this->window).x 
+    << " " << sf::Mouse::getPosition(*this->window).y << "\n" ;
+    
+
 }
 
 void Game::render()
@@ -78,6 +101,7 @@ void Game::render()
     this->window->clear(sf::Color::Red);
 
     // Draw game objects 
-
+    this->window->draw(this->enemy);
     this->window->display();
+
 }

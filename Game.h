@@ -4,8 +4,8 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
-#pragma once 
 
 /*
     Class that acts as the game engine 
@@ -19,11 +19,19 @@ class Game
         // Window 
         sf::RenderWindow* window ;
         sf::VideoMode videoMode ; 
-        sf::Event ev ; 
+        sf::Event ev ;
+
+        //Mouse positions
+        sf::Vector2i mousePosWindow ; // pos of mouse relative to game's window 
+
+        //Game objects
+        sf::RectangleShape enemy ;
+
 
         // private functions
         void initVariables();
         void initWindow();
+        void initEnemies();
 
 
     public : 
