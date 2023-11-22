@@ -8,15 +8,18 @@ int main()
     Game game;
 
     // Game loop
+    /* 
+    While game is running :
+        - prepare next frame (update) 
+        - display it (render)     
+    */
     while(game.running())
     {
-
         // Update 
         game.update();
 
         // Render 
         game.render();
-
     }
 
     // End of application 

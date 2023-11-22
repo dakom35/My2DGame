@@ -2,6 +2,17 @@
 
 
 // Private functions 
+
+
+// void Game::initVariables()
+// {
+//     /*
+//             // access the member variable window of the current instance of the class 'Game'
+//             // 
+//     */
+//     this->window = nullptr ; 
+// }
+
 void Game::initVariables()
 {
     this->window = nullptr ;
@@ -9,6 +20,11 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
+    /*
+        sets window settings :
+            - res
+            - fps
+    */
     this->videoMode.height = 600 ; 
     this->videoMode.width = 800 ; 
     this->window = new sf::RenderWindow(this->videoMode, "Game 2", sf::Style::Titlebar | sf::Style::Close);
@@ -18,6 +34,7 @@ void Game::initWindow()
 
 void Game::initEnemies()
 {
+
     float Xpos = 200;
     float Ypos = 250 ;
     this->enemy.setPosition(Xpos,Ypos);
@@ -61,11 +78,12 @@ void Game::pollEvents()
         switch(this->ev.type)
         {
             case sf::Event::Closed:
-                this->window->close();
+                this->window->close(); // really frees memory when closing display (click cross for example)
                 break;
             case sf::Event::KeyPressed:
                 if(this->ev.key.code == sf::Keyboard::Escape)
                     this->window->close();
+                    std::cout << "My2DGame has been closed !!! See you next time !!!" << std::endl ; 
                     break;
         }
     }
@@ -88,21 +106,16 @@ void Game::update()
 {
     this->pollEvents(); 
     this->updateMousePositions();
-
-
 }
 
 void Game::render()
 {
     /*
         @return void 
-
-        -clear old frame
-        -render objects
-        -display frame 
+        - clear old frame
+        - render objects
+        - display frame 
         Renders the game objects .
-
-
     */
     this->window->clear(sf::Color::Red);
 

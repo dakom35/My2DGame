@@ -14,15 +14,24 @@
 class Game
 {
     private : 
-
-        // Variables
-        // Window 
+        /*
+            - window : summons a system window for the game
+            - videoMode : 
+                --> width
+                --> height
+                --> bitsPerPixel
+                    ... of video
+            - ev : any system event such as :
+                -  mouse/keyboard input
+                -  game closing
+                
+        */
         sf::RenderWindow* window ;
         sf::VideoMode videoMode ; 
-        sf::Event ev ;
+        sf::Event ev ; // Every event 
 
         //Mouse positions
-        sf::Vector2i mousePosWindow ; // pos of mouse relative to game's window 
+        sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
 
         //Game objects
         sf::RectangleShape enemy ;
