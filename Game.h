@@ -49,7 +49,7 @@ class Game
         Game();
         virtual ~Game();
 
-        // Accessors 
+        // Accessors
         const bool running() const ; 
 
         // Functions 
@@ -57,6 +57,7 @@ class Game
         void update(); 
         void render(); 
         void updateMousePositions();
+        bool isMousePosInRect(sf::Vector2f rectPos,sf::Vector2f mousePos,sf::Vector2f rectSize,sf::Vector2f scale);
 
 };
 
