@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cstdlib> // for random enemy positions
+#include <ctime> // for random enemy positions
 
 
 /*
@@ -34,14 +36,16 @@ class Game
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
 
         //Game objects
-        sf::RectangleShape enemy ;
+        std::vector<sf::RectangleShape> enemyVector;
+
+
 
 
         // private functions
         void initVariables();
         void initWindow();
         void initEnemies();
-        void killEnemy();
+        void respawnEnemy();
 
 
     public : 

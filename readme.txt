@@ -1,5 +1,5 @@
 This is a project to learn how to make 'simple' games in C++ with the SFML library
-The goal is to recreate the pong game.
+The goal is to "shoot" the rectangles popping on the screen : a good aim warm-up.
 
 
  This is the command to compile and generate the executable game file : 

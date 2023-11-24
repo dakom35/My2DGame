@@ -34,21 +34,33 @@ void Game::initWindow()
 
 void Game::initEnemies()
 {
-
-    float Xpos = 200;
-    float Ypos = 250 ;
-    this->enemy.setPosition(Xpos,Ypos);
-    this->enemy.setSize(sf::Vector2f(100.f,100.f));
-    this->enemy.setScale(sf::Vector2f(0.6f,0.4f));
-    this->enemy.setFillColor(sf::Color::Cyan); 
-    this->enemy.setOutlineColor(sf::Color::Green);
-    this->enemy.setOutlineThickness(5.f);
-    //this->enemy.s
+    sf::RectangleShape enemy;
+    int numberOfEnemies = 5 ;
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
+    float Xpos,Ypos ;
+    enemy.setSize(sf::Vector2f(100.f,100.f));
+    enemy.setScale(sf::Vector2f(0.6f,0.4f));
+    enemy.setFillColor(sf::Color::Red);
+    enemy.setOutlineColor(sf::Color::Green);
+    enemy.setOutlineThickness(5.f);
+    for(int i = 0; i < numberOfEnemies ; i++) 
+    {
+        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1); // Numbers between 0 and width
+        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1); // numbers between 0 and height
+        enemy.setPosition(Xpos,Ypos);
+        enemyVector.push_back(enemy);
+    } 
 }
 
-void Game::killEnemy()
+void Game::respawnEnemy()
 {
-    this->enemy.setSize(sf::Vector2f(0.f,0.f));
+    float Xpos,Ypos;
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
+    Xpos = static_cast<float>(std::rand() % this->videoMode.width+1); // Numbers between 0 and width
+    Ypos = static_cast<float>(std::rand() % this->videoMode.height+1); // numbers between 0 and height
+    std::cout << "Xpos = " << Xpos << "| Ypos = " << Ypos << "\n" ;
+    this->enemyVector[0].setPosition(Xpos,Ypos);
+    this->enemyVector[0].setSize(sf::Vector2f(100.f,100.f));
 }
 
 
@@ -142,6 +154,8 @@ void Game::updateMousePositions()
             - Mouse position relative to window (Vector2i)
     */
    bool inclusion = false ;
+   static int counter = 0 ; // slow down the rate of display of mouse position to 1s
+   counter++;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
@@ -149,13 +163,18 @@ void Game::updateMousePositions()
             // Get the current mouse position
             sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window);
             sf::Vector2f convertedMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-            inclusion = Game::isMousePosInRect(this->enemy.getPosition(),convertedMousePos,this->enemy.getSize(),this->enemy.getScale());
+            inclusion = Game::isMousePosInRect(this->enemyVector[0].getPosition(),convertedMousePos,this->enemyVector[0].getSize(),this->enemyVector[0].getScale());
        }
-   std::cout << "Mouse pos :" << this->mousePosWindow.x << " " << this->mousePosWindow.y << "\n" ;
+    if(counter==60)
+    {
+        std::cout << "Mouse pos :" << this->mousePosWindow.x << " " << this->mousePosWindow.y << "\n" ;
+        counter=0;
+    }
+   
    if(inclusion == true) 
     {
         std::cout << "Ennemy shot !" << "\n" ;
-        killEnemy(); 
+        respawnEnemy(); 
     }
         
    }
@@ -176,10 +195,15 @@ void Game::render()
         - display frame 
         Renders the game objects .
     */
-    this->window->clear(sf::Color::Red);
+    this->window->clear(sf::Color::Transparent);
 
     // Draw game objects 
-    this->window->draw(this->enemy);
+    for (const auto& enemy : this->enemyVector) 
+    {
+        // Access and use the current element directly, useful if enemies are of different types
+        this->window->draw(enemy);
+    }
+    
     this->window->display();
 
 }
