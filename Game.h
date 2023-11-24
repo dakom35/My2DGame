@@ -45,7 +45,7 @@ class Game
         void initVariables();
         void initWindow();
         void initEnemies();
-        void respawnEnemy();
+        void respawnEnemy(int i);
 
 
     public : 

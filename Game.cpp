@@ -52,15 +52,14 @@ void Game::initEnemies()
     } 
 }
 
-void Game::respawnEnemy()
+void Game::respawnEnemy(int i)
 {
     float Xpos,Ypos;
-    std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
     Xpos = static_cast<float>(std::rand() % this->videoMode.width+1); // Numbers between 0 and width
     Ypos = static_cast<float>(std::rand() % this->videoMode.height+1); // numbers between 0 and height
     std::cout << "Xpos = " << Xpos << "| Ypos = " << Ypos << "\n" ;
-    this->enemyVector[0].setPosition(Xpos,Ypos);
-    this->enemyVector[0].setSize(sf::Vector2f(100.f,100.f));
+    std::cout << "width  = " << videoMode.width << "| height = " << videoMode.height << "\n" ;
+    this->enemyVector[i].setPosition(Xpos,Ypos);
 }
 
 
@@ -154,29 +153,31 @@ void Game::updateMousePositions()
             - Mouse position relative to window (Vector2i)
     */
    bool inclusion = false ;
-   static int counter = 0 ; // slow down the rate of display of mouse position to 1s
-   counter++;
+//    static int counter = 0 ; // slow down the rate of display of mouse position to 1s
+//    counter++;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+    {
+        // Get the current mouse position
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window);
+        sf::Vector2f convertedMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+        for (size_t i = 0 ; i< enemyVector.size(); i++) 
         {
-            // Get the current mouse position
-            sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window);
-            sf::Vector2f convertedMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-            inclusion = Game::isMousePosInRect(this->enemyVector[0].getPosition(),convertedMousePos,this->enemyVector[0].getSize(),this->enemyVector[0].getScale());
-       }
-    if(counter==60)
-    {
-        std::cout << "Mouse pos :" << this->mousePosWindow.x << " " << this->mousePosWindow.y << "\n" ;
-        counter=0;
+        // Access and use the current element directly, useful even if enemies are of different types
+            inclusion = Game::isMousePosInRect(enemyVector[i].getPosition(),convertedMousePos,enemyVector[i].getSize(),enemyVector[i].getScale());
+            if(inclusion == true) 
+            {
+                std::cout << "Enemy shot !" << "\n" ;
+                respawnEnemy(i); 
+            }
+        }     
     }
-   
-   if(inclusion == true) 
-    {
-        std::cout << "Ennemy shot !" << "\n" ;
-        respawnEnemy(); 
-    }
-        
+    // if(counter==60)
+    // {
+    //     std::cout << "Mouse pos :" << this->mousePosWindow.x << " " << this->mousePosWindow.y << "\n" ;
+    //     counter=0;
+    // }     
    }
 
 void Game::update()
@@ -195,7 +196,7 @@ void Game::render()
         - display frame 
         Renders the game objects .
     */
-    this->window->clear(sf::Color::Transparent);
+    this->window->clear(sf::Color::Black);
 
     // Draw game objects 
     for (const auto& enemy : this->enemyVector) 
