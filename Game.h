@@ -41,6 +41,7 @@ class Game
         void initVariables();
         void initWindow();
         void initEnemies();
+        void killEnemy();
 
 
     public : 

@@ -43,6 +43,12 @@ void Game::initEnemies()
     this->enemy.setFillColor(sf::Color::Cyan); 
     this->enemy.setOutlineColor(sf::Color::Green);
     this->enemy.setOutlineThickness(5.f);
+    //this->enemy.s
+}
+
+void Game::killEnemy()
+{
+    this->enemy.setSize(sf::Vector2f(0.f,0.f));
 }
 
 
@@ -70,21 +76,26 @@ const bool Game::running() const
 
 // Functions 
 
+// as long as there is not event to handle...
 void Game::pollEvents()
 {
     // Event polling
     while(this->window->pollEvent(this->ev))
     {
+        // we check the event's type...
         switch(this->ev.type)
         {
-            case sf::Event::Closed:
-                this->window->close(); // really frees memory when closing display (click cross for example)
+            case sf::Event::Closed: // closing request
+                this->window->close(); // effectively closing
                 break;
             case sf::Event::KeyPressed:
                 if(this->ev.key.code == sf::Keyboard::Escape)
                     this->window->close();
                     std::cout << "My2DGame has been closed !!! See you next time !!!" << std::endl ; 
                     break;
+            // we don't handle the other event types 
+            default:
+            break;
         }
     }
 
@@ -115,9 +126,11 @@ bool Game::isMousePosInRect(sf::Vector2f rectPos,sf::Vector2f mousePos,sf::Vecto
     bool inclusion = false ; // answer to question
     float rectSizeLengthX = rectSize.x * scale.x ;
     float rectSizeLengthY = rectSize.y * scale.y ;
-    if(rectPos.x <= mousePos.x <= rectPos.x + rectSizeLengthX 
-    && rectPos.y <= mousePos.y <= rectPos.y + rectSizeLengthY ) // see @brief
+    if((rectPos.x <= mousePos.x) &&  (mousePos.x <= (rectPos.x + rectSizeLengthX)) 
+    && (rectPos.y <= mousePos.y) && (mousePos.y <= (rectPos.y + rectSizeLengthY)))
+    {
         inclusion = true ;
+    } 
     return inclusion ;
 }
 
@@ -142,6 +155,7 @@ void Game::updateMousePositions()
    if(inclusion == true) 
     {
         std::cout << "Ennemy shot !" << "\n" ;
+        killEnemy(); 
     }
         
    }
