@@ -133,38 +133,6 @@ void Game::pollEvents()
 
 }
 
-bool Game::isMousePosInRect(sf::Vector2f rectPos,sf::Vector2f mousePos,sf::Vector2f rectSize,sf::Vector2f scale)
-{
-    /*
-    *   @return bool inclusion : true if mouse's position is in the rectangle
-
-        @args 
-                sf::Vector2i rectPos : origin point of rectangle 
-                sf::Vector2i mousePos : mouse position
-                sf::Vector2f rectSize : rectangle's size 
-                sf::Vector2f scale : scaling factor
-
-        @variables
-                float rectSizeLengthX : length of rectangle along X axis
-                float rectSizeLengthY : length of rectangle along Y axis
-
-        @brief 
-                a point M is in a rectangle of origin point A if : 
-                    xA <= xM <= xA + xL
-                    yA <= yM <= yA + yL 
-                with xL being the length of rectangle along X axis
-                and yL for the Y axis.
-    */
-    bool inclusion = false ; // answer to question
-    float rectSizeLengthX = rectSize.x * scale.x ;
-    float rectSizeLengthY = rectSize.y * scale.y ;
-    if((rectPos.x <= mousePos.x) &&  (mousePos.x <= (rectPos.x + rectSizeLengthX)) 
-    && (rectPos.y <= mousePos.y) && (mousePos.y <= (rectPos.y + rectSizeLengthY)))
-    {
-        inclusion = true ;
-    } 
-    return inclusion ;
-}
 
 void Game::updateMousePositions()
 {
@@ -174,8 +142,9 @@ void Game::updateMousePositions()
             - Mouse position relative to window (Vector2i)
     */
    bool inclusion = false ;
-//    static int counter = 0 ; // slow down the rate of display of mouse position to 1s
-//    counter++;
+   bool inclusion2 = false;
+   sf::FloatRect floatRect ;
+   sf::Rect<float> rect ;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
@@ -185,20 +154,15 @@ void Game::updateMousePositions()
         sf::Vector2f convertedMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
         for (size_t i = 0 ; i< enemyVector.size(); i++) 
         {
-        // Access and use the current element directly, useful even if enemies are of different types
-            inclusion = Game::isMousePosInRect(enemyVector[i].getPosition(),convertedMousePos,enemyVector[i].getSize(),enemyVector[i].getScale());
-            if(inclusion == true) 
+            floatRect = enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
+            rect = sf::Rect(floatRect.left, floatRect.top, floatRect.width, floatRect.height); // Convert the FloatRect to Rect
+            if(rect.contains(convertedMousePos)) 
             {
                 std::cout << "Enemy shot !" << "\n" ;
-                respawnEnemy(i); 
+                respawnEnemy(i);
             }
         }     
-    }
-    // if(counter==60)
-    // {
-    //     std::cout << "Mouse pos :" << this->mousePosWindow.x << " " << this->mousePosWindow.y << "\n" ;
-    //     counter=0;
-    // }     
+    }   
    }
 
 void Game::update()
