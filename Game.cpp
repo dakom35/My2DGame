@@ -38,27 +38,48 @@ void Game::initEnemies()
     int numberOfEnemies = 5 ;
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
     float Xpos,Ypos ;
-    enemy.setSize(sf::Vector2f(100.f,100.f));
-    enemy.setScale(sf::Vector2f(0.6f,0.4f));
+    sf::Vector2f size = {100.f,100.f}; 
+    sf::Vector2f scale = {0.6f,0.4f};
+    enemy.setSize(size);
+    enemy.setScale(scale);
     enemy.setFillColor(sf::Color::Red);
     enemy.setOutlineColor(sf::Color::Green);
     enemy.setOutlineThickness(5.f);
     for(int i = 0; i < numberOfEnemies ; i++) 
     {
-        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1); // Numbers between 0 and width
-        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1); // numbers between 0 and height
+        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
+        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
+        if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
+        if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
         enemy.setPosition(Xpos,Ypos);
         enemyVector.push_back(enemy);
     } 
 }
 
+
+
 void Game::respawnEnemy(int i)
 {
+    /* 
+        @brief respawns the Enemy at a random position in the window
+        @return void
+        @param i is the ennemy's number in the enemyVector
+    */
     float Xpos,Ypos;
-    Xpos = static_cast<float>(std::rand() % this->videoMode.width+1); // Numbers between 0 and width
-    Ypos = static_cast<float>(std::rand() % this->videoMode.height+1); // numbers between 0 and height
-    std::cout << "Xpos = " << Xpos << "| Ypos = " << Ypos << "\n" ;
-    std::cout << "width  = " << videoMode.width << "| height = " << videoMode.height << "\n" ;
+    sf::Vector2f position,size,scale ;
+    sf::RectangleShape enemy = this->enemyVector[i] ;
+    position = enemy.getPosition();
+    size = enemy.getSize();
+    scale = enemy.getScale();
+
+    Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
+    Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
+    if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
+    if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
+
+    // std::cout << "Origin = " << position.x << " " << position.y
+    //             << " width = " << size.x * scale.x << " height = " << size.y * scale.y
+    //             << "\n" ;
     this->enemyVector[i].setPosition(Xpos,Ypos);
 }
 
