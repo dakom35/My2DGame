@@ -134,12 +134,12 @@ void Game::pollEvents()
 }
 
 
-void Game::updateMousePositions()
+void Game::updateEnemyStatus()
 {
     /*
-        @ return void
-        updates the mouse positions :
-            - Mouse position relative to window (Vector2i)
+        @return void
+        @brief check if user clicks on enemies, if so respawn them elsewhere
+
     */
    bool inclusion = false ;
    bool inclusion2 = false;
@@ -149,8 +149,7 @@ void Game::updateMousePositions()
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
     {
-        // Get the current mouse position
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window);
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f convertedMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
         for (size_t i = 0 ; i< enemyVector.size(); i++) 
         {
@@ -168,7 +167,7 @@ void Game::updateMousePositions()
 void Game::update()
 {
     this->pollEvents(); 
-    this->updateMousePositions();
+    this->updateEnemyStatus();
 
 }
 
