@@ -142,7 +142,6 @@ void Game::updateEnemyStatus()
 
     */
    bool inclusion = false ;
-   bool inclusion2 = false;
    sf::FloatRect floatRect ;
    sf::Rect<float> rect ;
 
