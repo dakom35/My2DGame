@@ -31,6 +31,9 @@ class Game
         sf::RenderWindow* window ;
         sf::VideoMode videoMode ; 
         sf::Event ev ; // Every event 
+        int fps_max  ; // maximum fps rate
+        int resX ; // X resolution
+        int resY  ; // Y resolution
 
         //Mouse positions
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
@@ -61,7 +64,7 @@ class Game
         void pollEvents();
         void update(); 
         void render(); 
-        void updateEnemyStatus();
+        void shootingLogic();
 
 };
 
