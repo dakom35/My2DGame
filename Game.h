@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstdlib> // for random enemy positions
 #include <ctime> // for random enemy positions
+#include <chrono> // for FPS measurements
 
 
 /*
@@ -31,6 +32,7 @@ class Game
         sf::RenderWindow* window ;
         sf::VideoMode videoMode ; 
         sf::Event ev ; // Every event 
+        //sf::Clock clock ; 
         int fps_max  ; // maximum fps rate
         int resX ; // X resolution
         int resY  ; // Y resolution

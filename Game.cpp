@@ -16,7 +16,7 @@
 void Game::initVariables()
 {
     this->window = nullptr ;
-    this->fps_max = 120 ; 
+    this->fps_max = 240 ; 
     this->resX = 800 ; 
     this->resY = 600 ;
 }
@@ -111,10 +111,15 @@ const bool Game::running() const
 
 // Functions 
 
-// as long as there is not event to handle...
+// as long as there is no event to handle...
 void Game::pollEvents()
 {
+    float fps ;
+
     // Event polling
+
+
+
     while(this->window->pollEvent(this->ev))
     {
         // we check the event's type...
@@ -128,12 +133,10 @@ void Game::pollEvents()
                     this->window->close();
                     std::cout << "My2DGame has been closed !!! See you next time !!!" << std::endl ; 
                     break;
-            // we don't handle the other event types 
-            default:
+            default:  // we don't handle the other event types 
             break;
         }
     }
-
 }
 
 
