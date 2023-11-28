@@ -32,7 +32,18 @@ int Game::initVariables()
         return -1;
     }
     this->gunshotSound.setBuffer(gunshotSoundBuffer); 
-    
+    if (!this->font.loadFromFile("Fonts/arial.ttf"))
+    {
+        std::cerr << "The font was not found \n" ;
+        return -1 ; 
+    }
+    this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
+    this->fps_txt.setFont(font);
+    this->fps_txt.setString("FPS = ");
+    this->fps_txt.setFillColor(sf::Color::Red);
+    this->fps_txt.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    this->fps_txt.setCharacterSize(20);
+    this->fps_txt.setPosition(100.f,100.f);
     return 0 ; 
 }
 
@@ -132,9 +143,6 @@ void Game::pollEvents()
     float fps ;
 
     // Event polling
-
-
-
     while(this->window->pollEvent(this->ev))
     {
         // we check the event's type...
@@ -193,6 +201,7 @@ void Game::shootingLogic()
 
 void Game::update()
 {
+    this->start = std::chrono::high_resolution_clock::now(); 
     this->pollEvents(); 
     this->shootingLogic();
 
@@ -207,7 +216,14 @@ void Game::render()
         - display frame 
         Renders the game objects .
     */
+    static int counter = 0 ; // counts the number of frames up to N
+    int N = 500 ; // number of samples used by the average process
+    static float last_fps_avg = 0.f ; // remember last avg_fps once computation is over
     this->window->clear(sf::Color::Black);
+
+
+
+
 
     // Draw game objects 
     for (const auto& enemy : this->enemyVector) 
@@ -215,7 +231,25 @@ void Game::render()
         // Access and use the current element directly, useful if enemies are of different types
         this->window->draw(enemy);
     }
-    
+
+    this->window->draw(this->fps_txt);
     this->window->display();
+    
+
+    this->end = std::chrono::high_resolution_clock::now(); 
+    this->fps = (float)1e9/(float)std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count(); 
+    this->avg_fps += fps/N ;  
+    if(counter == N-1) // N-1 because the avg_fps increment occured N times
+    {
+        std::cout << "Average FPS = " << last_fps_avg << "\n";
+        counter= 0;
+        last_fps_avg = this->avg_fps ;
+        this->avg_fps = 0.f ;
+    }
+    this->fps_txt.setString("FPS = "+std::to_string(last_fps_avg)); 
+    
+    counter++;
+    // std::cout << "FPS = " << this->fps << "\n";
+
 
 }

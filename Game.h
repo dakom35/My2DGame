@@ -39,16 +39,26 @@ class Game
         int resX ; // X resolution
         int resY  ; // Y resolution
         unsigned int points ; 
+        float fps ; // fps calculated with 1 frame
+        float avg_fps ; // average fps measure performed on multiple frames,
+                        // a few instructions are ignored => increases inacurracy
         sf::SoundBuffer gunshotSoundBuffer;
         sf::SoundBuffer painSoundBuffer;
-        sf::Sound gunshotSound; 
-        sf::Sound painSound ;
+        sf::Sound gunshotSound; // sound of firing weapon
+        sf::Sound painSound ; // sound of the enemy dying
+        std::chrono::high_resolution_clock::time_point start; // for fps measurement
+        std::chrono::high_resolution_clock::time_point end; // for fps measurement
 
         //Mouse positions
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
 
         //Game objects
         std::vector<sf::RectangleShape> enemyVector;
+
+        // Writing on screen
+        sf::Font font; // font for every text in HUD
+        sf::Text fps_txt ;
+
 
 
 
