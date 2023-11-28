@@ -19,6 +19,7 @@ void Game::initVariables()
     this->fps_max = 240 ; 
     this->resX = 800 ; 
     this->resY = 600 ;
+    this->points = 0 ;
 }
 
 void Game::initWindow()
@@ -30,7 +31,7 @@ void Game::initWindow()
     */
     this->videoMode.height = resY ; 
     this->videoMode.width = resX ; 
-    this->window = new sf::RenderWindow(this->videoMode, "Game 2", sf::Style::Titlebar | sf::Style::Close);
+    this->window = new sf::RenderWindow(this->videoMode, "Aim Warm-Up", sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(fps_max); //max_fps
 
 }
@@ -46,7 +47,7 @@ void Game::initEnemies()
     enemy.setSize(size);
     enemy.setScale(scale);
     enemy.setFillColor(sf::Color::Red);
-    enemy.setOutlineColor(sf::Color::Green);
+    enemy.setOutlineColor(sf::Color::White);
     enemy.setOutlineThickness(5.f);
     for(int i = 0; i < numberOfEnemies ; i++) 
     {
@@ -146,41 +147,32 @@ void Game::shootingLogic()
         @return void
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
-   static bool leftClickActive = false ;
+   bool leftClickActive = false ;
    sf::FloatRect floatRect ;
    sf::Rect<float> rect ;
    //sf::Event event;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-    if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left)
-    {  // Fire the shot only if the mouse button was not pressed before
-        if(!leftClickActive)
+    if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left) // Fire the shot only if the mouse button was not pressed before
+    {  
+        leftClickActive = true ;
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
+        sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+        for(size_t i = 0; i<enemyVector.size(); i++) 
         {
-            leftClickActive = true ;
-            sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
-            sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-            for(size_t i = 0; i<enemyVector.size(); i++) 
+            floatRect = enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
+            rect = sf::Rect(floatRect.left, floatRect.top, floatRect.width, floatRect.height); // Convert the FloatRect to Rect
+            if(rect.contains(floatMousePos)) 
             {
-                floatRect = enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
-                rect = sf::Rect(floatRect.left, floatRect.top, floatRect.width, floatRect.height); // Convert the FloatRect to Rect
-                if(rect.contains(floatMousePos)) 
-                {
-                    std::cout << "Enemy shot !" << "\n" ;
-                    respawnEnemy(i);
-                }
-            }     
-        }
-        else if (this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left) 
-        {   // Reset the flag when the mouse button is released     
-                leftClickActive = false;
-        }
-        
+                std::cout << "Enemy shot !" << "\n" ;
+                respawnEnemy(i);
+            }
+        }     
+        if (this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left) 
+        {       
+                leftClickActive = false; // Reset the flag when the mouse button is released 
+        }  
     }  
-    else if (~sf::Mouse::isButtonPressed(sf::Mouse::Left)) // if left click is not clicked
-    {
-        leftClickActive = false ;
-    }
-
 }
 
 void Game::update()

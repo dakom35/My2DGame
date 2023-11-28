@@ -36,6 +36,7 @@ class Game
         int fps_max  ; // maximum fps rate
         int resX ; // X resolution
         int resY  ; // Y resolution
+        unsigned int points ; 
 
         //Mouse positions
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
