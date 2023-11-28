@@ -39,8 +39,10 @@ class Game
         int resX ; // X resolution
         int resY  ; // Y resolution
         unsigned int points ; 
-        sf::SoundBuffer soundBuffer;
-        sf::Sound sound; 
+        sf::SoundBuffer gunshotSoundBuffer;
+        sf::SoundBuffer painSoundBuffer;
+        sf::Sound gunshotSound; 
+        sf::Sound painSound ;
 
         //Mouse positions
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
@@ -77,5 +79,3 @@ class Game
 
 
 #endif // GAME_H
-
-

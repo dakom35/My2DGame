@@ -20,12 +20,18 @@ int Game::initVariables()
     this->resX = 800 ; 
     this->resY = 600 ;
     this->points = 0 ;
-    if (!this->soundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
+    if (!this->gunshotSoundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
     {
-        std::cerr << "The file for the sound buffer is not found \n" ;
+        std::cerr << "The file for the gunshotSound buffer is not found \n" ;
         return -1;
     }
-    this->sound.setBuffer(soundBuffer); 
+    this->painSound.setBuffer(painSoundBuffer); 
+        if (!this->painSoundBuffer.loadFromFile("pain-sound-1.wav"))
+    {
+        std::cerr << "The file for the painSound buffer is not found \n" ;
+        return -1;
+    }
+    this->gunshotSound.setBuffer(gunshotSoundBuffer); 
     
     return 0 ; 
 }
@@ -39,7 +45,7 @@ void Game::initWindow()
     */
     this->videoMode.height = resY ; 
     this->videoMode.width = resX ; 
-    this->window = new sf::RenderWindow(this->videoMode, "Aim Warm-Up", sf::Style::Titlebar | sf::Style::Close);
+    this->window = new sf::RenderWindow(this->videoMode, "Aim Training", sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(fps_max); //max_fps
 
 }
@@ -163,7 +169,7 @@ void Game::shootingLogic()
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
     {  // Fire the shot only if the mouse button was not pressed before
-        this->sound.play();
+        this->gunshotSound.play();
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
@@ -173,7 +179,7 @@ void Game::shootingLogic()
             rect = sf::Rect(floatRect.left, floatRect.top, floatRect.width, floatRect.height); // Convert the FloatRect to Rect
             if(rect.contains(floatMousePos)) 
             {
-                std::cout << "Enemy shot !" << "\n" ;
+                this->painSound.play();
                 this->points++; 
                 respawnEnemy(i);
             }
