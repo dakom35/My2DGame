@@ -4,10 +4,12 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <cstdlib> // for random enemy positions
 #include <ctime> // for random enemy positions
 #include <chrono> // for FPS measurements
+
 
 
 /*
@@ -37,6 +39,8 @@ class Game
         int resX ; // X resolution
         int resY  ; // Y resolution
         unsigned int points ; 
+        sf::SoundBuffer soundBuffer;
+        sf::Sound sound; 
 
         //Mouse positions
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
@@ -48,7 +52,7 @@ class Game
 
 
         // private functions
-        void initVariables();
+        int initVariables();
         void initWindow();
         void initEnemies();
         void respawnEnemy(int i);

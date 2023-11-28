@@ -13,13 +13,21 @@
 //     this->window = nullptr ; 
 // }
 
-void Game::initVariables()
+int Game::initVariables()
 {
     this->window = nullptr ;
     this->fps_max = 240 ; 
     this->resX = 800 ; 
     this->resY = 600 ;
     this->points = 0 ;
+    if (!this->soundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
+    {
+        std::cerr << "The file for the sound buffer is not found \n" ;
+        return -1;
+    }
+    this->sound.setBuffer(soundBuffer); 
+    
+    return 0 ; 
 }
 
 void Game::initWindow()
@@ -147,14 +155,15 @@ void Game::shootingLogic()
         @return void
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
-   bool leftClickActive = false ;
+   static bool leftClickActive = false ;
    sf::FloatRect floatRect ;
    sf::Rect<float> rect ;
    //sf::Event event;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-    if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left) // Fire the shot only if the mouse button was not pressed before
-    {  
+    if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
+    {  // Fire the shot only if the mouse button was not pressed before
+        this->sound.play();
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
@@ -165,13 +174,14 @@ void Game::shootingLogic()
             if(rect.contains(floatMousePos)) 
             {
                 std::cout << "Enemy shot !" << "\n" ;
+                this->points++; 
                 respawnEnemy(i);
             }
         }     
-        if (this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left) 
-        {       
-                leftClickActive = false; // Reset the flag when the mouse button is released 
-        }  
+    }  
+    else if(this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left) 
+    {       
+        leftClickActive = false; // Reset the flag when the mouse button is released 
     }  
 }
 
