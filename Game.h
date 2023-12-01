@@ -54,6 +54,11 @@ class Game
 
         //Game objects
         std::vector<sf::RectangleShape> enemyVector;
+        std::vector<sf::Sprite> enemyVector2 ;
+        sf::Vector2f sizeMonster = {80.f,80.f} ; 
+        sf::Vector2f scaleMonster = {1.f,1.f}; 
+        sf::Texture textureMonster ;
+
 
         // Writing on screen
         sf::Font font; // font for every text in HUD
@@ -67,7 +72,7 @@ class Game
         int initVariables();
         void initWindow();
         void initEnemies();
-        void respawnEnemy(int i);
+        void respawnEnemy(int i,bool monster);
 
 
     public : 

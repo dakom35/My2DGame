@@ -37,13 +37,14 @@ int Game::initVariables()
         std::cerr << "The font was not found \n" ;
         return -1 ; 
     }
+
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
     this->fps_txt.setFont(font);
     this->fps_txt.setString("FPS = ");
     this->fps_txt.setFillColor(sf::Color::Red);
     this->fps_txt.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    this->fps_txt.setCharacterSize(20);
-    this->fps_txt.setPosition(100.f,100.f);
+    this->fps_txt.setCharacterSize(15);
+    this->fps_txt.setPosition(0.f,0.f);
     return 0 ; 
 }
 
@@ -63,12 +64,20 @@ void Game::initWindow()
 
 void Game::initEnemies()
 {
+    
+    sf::Sprite spriteMonster; 
     sf::RectangleShape enemy;
     int numberOfEnemies = 5 ;
+    if(!this->textureMonster.loadFromFile("Images/monster1.png"))
+    {
+        std::cerr << "The image was not found \n" ;
+    }
+    spriteMonster.setTexture(this->textureMonster);
+
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
-    float Xpos,Ypos ;
-    sf::Vector2f size = {100.f,100.f}; 
-    sf::Vector2f scale = {0.6f,0.4f};
+    float Xpos,Xpos2,Ypos,Ypos2 ;
+    sf::Vector2f size = {80.f,80.f}; 
+    sf::Vector2f scale = {1.f,1.f};
     enemy.setSize(size);
     enemy.setScale(scale);
     enemy.setFillColor(sf::Color::Red);
@@ -78,38 +87,53 @@ void Game::initEnemies()
     {
         Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
         Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
+        Xpos2 = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthMonster)
+        Ypos2 = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightMonster)
         if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
         if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
+        if(Xpos2 < 0) Xpos2 += size.x*scale.x ; // fast way to prevent spawn to the left of window
+        if(Ypos2 < 0 ) Ypos2 += size.y*scale.y ; // fast way to prevent spawn above of window
         enemy.setPosition(Xpos,Ypos);
-        enemyVector.push_back(enemy);
+        spriteMonster.setPosition(Xpos2,Ypos2);
+        this->enemyVector.push_back(enemy);
+        this->enemyVector2.push_back(spriteMonster);
     } 
 }
 
 
 
-void Game::respawnEnemy(int i)
+void Game::respawnEnemy(int i,bool isMonster)
 {
     /* 
         @brief respawns the Enemy at a random position in the window
         @return void
         @param i is the ennemy's number in the enemyVector
+                isMonster says if it's a rectangle or a real monster (sprite)
     */
-    float Xpos,Ypos;
-    sf::Vector2f position,size,scale ;
+    float Xpos,Ypos,Xpos2,Ypos2;
+    sf::Vector2f position,size,size2,scale,scale2 ;
     sf::RectangleShape enemy = this->enemyVector[i] ;
-    position = enemy.getPosition();
-    size = enemy.getSize();
-    scale = enemy.getScale();
-
-    Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
-    Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
-    if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
-    if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
-
-    // std::cout << "Origin = " << position.x << " " << position.y
-    //             << " width = " << size.x * scale.x << " height = " << size.y * scale.y
-    //             << "\n" ;
-    this->enemyVector[i].setPosition(Xpos,Ypos);
+    sf::Sprite enemy2 = this->enemyVector2[i];
+    if(!isMonster)
+    {
+        size2 = this->sizeMonster ;
+        scale2 = this->scaleMonster ;
+        Xpos2 = static_cast<float>(std::rand() % this->videoMode.width+1 - size2.x*scale2.x); // Numbers between 0 and (width - widthMonster)
+        Ypos2 = static_cast<float>(std::rand() % this->videoMode.height+1 - size2.y*scale2.y); // numbers between 0 and (height - heightRectangle)
+        if(Xpos2 < 0) Xpos2 += size2.x*scale2.x ; // fast way to prevent spawn to the left of window
+        if(Ypos2 < 0 ) Ypos2 += size2.y*scale2.y ; // fast way to prevent spawn above of window
+        this->enemyVector2[i].setPosition(Xpos2,Ypos2);
+    }
+    else
+    {
+        size = enemy.getSize();  
+        scale = enemy.getScale();  
+        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size2.x*scale2.x); // Numbers between 0 and (width - widthRectangle) 
+        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)  
+        if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
+        if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
+        this->enemyVector[i].setPosition(Xpos,Ypos);
+    }   
 }
 
 
@@ -170,8 +194,8 @@ void Game::shootingLogic()
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
    static bool leftClickActive = false ;
-   sf::FloatRect floatRect ;
-   sf::Rect<float> rect ;
+   sf::FloatRect enemyBounds,enemyBounds2 ;
+   sf::Rect<float> rectEnemyBounds,rectEnemyBounds2 ;
    //sf::Event event;
 
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
@@ -181,15 +205,24 @@ void Game::shootingLogic()
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-        for(size_t i = 0; i<enemyVector.size(); i++) 
+        for(size_t i = 0; i<this->enemyVector.size(); i++) 
         {
-            floatRect = enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
-            rect = sf::Rect(floatRect.left, floatRect.top, floatRect.width, floatRect.height); // Convert the FloatRect to Rect
-            if(rect.contains(floatMousePos)) 
+            enemyBounds = this->enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
+            enemyBounds2 = this->enemyVector2[i].getGlobalBounds(); // Get the global bounds of the monster
+            
+            rectEnemyBounds = sf::Rect(enemyBounds.left, enemyBounds.top, enemyBounds.width, enemyBounds.height); // Convert the FloatRect to Rect
+            rectEnemyBounds2 = sf::Rect(enemyBounds2.left, enemyBounds2.top, enemyBounds2.width, enemyBounds2.height) ;
+            if(rectEnemyBounds.contains(floatMousePos)) 
             {
                 this->painSound.play();
                 this->points++; 
-                respawnEnemy(i);
+                respawnEnemy(i,false);
+            }
+            if(rectEnemyBounds2.contains(floatMousePos))
+            {
+                this->painSound.play();
+                this->points++; 
+                respawnEnemy(i,true); 
             }
         }     
     }  
@@ -216,20 +249,22 @@ void Game::render()
         - display frame 
         Renders the game objects .
     */
+   this->window->clear(sf::Color::Black);
     static int counter = 0 ; // counts the number of frames up to N
-    int N = 500 ; // number of samples used by the average process
+    const int N = 500 ; // number of samples used by the average process
     static float last_fps_avg = 0.f ; // remember last avg_fps once computation is over
-    this->window->clear(sf::Color::Black);
-
-
-
-
-
+    
     // Draw game objects 
     for (const auto& enemy : this->enemyVector) 
     {
         // Access and use the current element directly, useful if enemies are of different types
         this->window->draw(enemy);
+    }
+    //this->window->draw(this->spriteMonster);
+    for (const auto& enemy2 : this->enemyVector2) 
+    {
+        // Access and use the current element directly, useful if enemies are of different types
+        this->window->draw(enemy2);
     }
 
     this->window->draw(this->fps_txt);
