@@ -10,9 +10,8 @@ Credits :
     SFML tutorial in C++ : https://www.youtube.com/playlist?list=PL6xSOsbVA1eb_QqMTTcql_3PdOiE928up (author : SurajSharmaFourKnob )
     Monster sprite : Stephen "Redshrike" Challener (Sprites) 5hiroi (concepts) Heather Lee Harvey (concept) (EmeraldActivities.com) www.OpenGameArt.org
 
-Informations for developers : 
+Developer's journal : 
 
-    Monsters' sizes : 
+TODO : get a faster pseudo random number generator such as Xoshiro256+ 
 
-        monster1's size : 56px*77px
-        monster2's size : 66px*69px
+
