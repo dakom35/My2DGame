@@ -88,8 +88,12 @@ class Game
         // Functions 
         void pollEvents();
         void update(); 
-        void render(); 
+         
         void shootingLogic();
+
+            // render functions
+            void render();
+            void renderHUD(); 
 
 };
 

@@ -263,9 +263,9 @@ void Game::render()
         // Access and use the current element directly, useful if enemies are of different types
         this->window->draw(monster);
     }
-    this->score_txt.setString("Score = "+std::to_string(score));
-    this->window->draw(this->fps_txt);
-    this->window->draw(this->score_txt);
+
+    this->renderHUD(); 
+
     this->window->display();
     
 
@@ -280,4 +280,15 @@ void Game::render()
     }
     this->fps_txt.setString("FPS = "+std::to_string(static_cast<int>(last_fps_avg))); 
     counter++;
+}
+
+void Game::renderHUD()
+/*
+    Functions to render every HUD objects (FPS,score,...)
+*/
+{
+    this->score_txt.setString("Score = "+std::to_string(score));
+    this->window->draw(this->fps_txt);
+    this->window->draw(this->score_txt);
+
 }
