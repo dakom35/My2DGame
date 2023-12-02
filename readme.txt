@@ -6,6 +6,9 @@ The goal is to "shoot" the rectangles popping on the screen : a good aim warm-up
 
 g++ -o Aim_Training main.cpp Game.cpp -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
  
- Greatly inspired from this YT channel : https://www.youtube.com/@SurajSharmaFourKnob
- More precisely, this tutorial playlist : https://www.youtube.com/playlist?list=PL6xSOsbVA1eb_QqMTTcql_3PdOiE928up
 
+
+
+Credits : 
+SFML tutorial in C++ : https://www.youtube.com/playlist?list=PL6xSOsbVA1eb_QqMTTcql_3PdOiE928up (author : SurajSharmaFourKnob )
+Monster sprite : Stephen "Redshrike" Challener (Sprites) 5hiroi (concepts) Heather Lee Harvey (concept) (EmeraldActivities.com) www.OpenGameArt.org
