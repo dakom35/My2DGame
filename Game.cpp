@@ -15,12 +15,13 @@
 
 int Game::initVariables()
 {
-    sf::Color semiTransparentColor(64, 255, 64, 128);
+    sf::Color semiTransparentGreen(64, 255, 64, 128);
     this->window = nullptr ;
     this->fps_max = 240 ; 
     this->resX = 800 ; 
     this->resY = 600 ;
-    this->points = 0 ;
+    this->score = 0 ;
+    this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
     if (!this->gunshotSoundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
     {
         std::cerr << "The file for the gunshotSound buffer is not found \n" ;
@@ -38,14 +39,12 @@ int Game::initVariables()
         std::cerr << "The font was not found \n" ;
         return -1 ; 
     }
-
-    this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
-    this->fps_txt.setFont(font);
-    this->fps_txt.setString("FPS = ");
-    this->fps_txt.setFillColor(semiTransparentColor);
-    this->fps_txt.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    this->fps_txt.setCharacterSize(15);
-    this->fps_txt.setPosition(0.f,0.f);
+//  Text (const String &string, const Font &font, unsigned int characterSize=30)
+    this->fps_txt = sf::Text("FPS = ",font,15);
+    this->fps_txt.setFillColor(semiTransparentGreen);
+    this->score_txt = sf::Text("Score =",font,15);
+    this->score_txt.setFillColor(semiTransparentGreen);
+    this->score_txt.setPosition(0.f,20.f);
     return 0 ; 
 }
 
@@ -214,13 +213,13 @@ void Game::shootingLogic()
             if(rectEnemyBounds.contains(floatMousePos)) 
             {
                 this->painSound.play();
-                this->points++; 
+                this->score++; 
                 respawnEnemy(i,false);
             }
             if(rectEnemyBounds2.contains(floatMousePos))
             {
                 this->painSound.play();
-                this->points++; 
+                this->score++; 
                 respawnEnemy(i,true); 
             }
         }     
@@ -259,14 +258,14 @@ void Game::render()
         // Access and use the current element directly, useful if enemies are of different types
         this->window->draw(enemy);
     }
-    //this->window->draw(this->spriteMonster);
-    for (const auto& enemy2 : this->enemyVector2) 
+    for (const auto& monster : this->enemyVector2) 
     {
         // Access and use the current element directly, useful if enemies are of different types
-        this->window->draw(enemy2);
+        this->window->draw(monster);
     }
-
+    this->score_txt.setString("Score = "+std::to_string(score));
     this->window->draw(this->fps_txt);
+    this->window->draw(this->score_txt);
     this->window->display();
     
 

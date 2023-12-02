@@ -38,7 +38,7 @@ class Game
         int fps_max  ; // maximum fps rate
         int resX ; // X resolution
         int resY  ; // Y resolution
-        unsigned int points ; 
+        unsigned int score ; // score of the player
         float fps ; // fps calculated with 1 frame
         float avg_fps ; // average fps measure performed on multiple frames,
                         // a few instructions are ignored => increases inacurracy
@@ -63,6 +63,7 @@ class Game
         // Writing on screen
         sf::Font font; // font for every text in HUD
         sf::Text fps_txt ;
+        sf::Text score_txt ;
 
 
 
