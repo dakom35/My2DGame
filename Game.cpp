@@ -15,6 +15,7 @@
 
 int Game::initVariables()
 {
+    sf::Color semiTransparentColor(64, 255, 64, 128);
     this->window = nullptr ;
     this->fps_max = 240 ; 
     this->resX = 800 ; 
@@ -41,7 +42,7 @@ int Game::initVariables()
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
     this->fps_txt.setFont(font);
     this->fps_txt.setString("FPS = ");
-    this->fps_txt.setFillColor(sf::Color::Red);
+    this->fps_txt.setFillColor(semiTransparentColor);
     this->fps_txt.setStyle(sf::Text::Bold | sf::Text::Underlined);
     this->fps_txt.setCharacterSize(15);
     this->fps_txt.setPosition(0.f,0.f);
@@ -176,7 +177,7 @@ void Game::pollEvents()
             case sf::Event::KeyPressed:
                 if(this->ev.key.code == sf::Keyboard::Escape)
                     this->window->close();
-                    std::cout << "My2DGame has been closed !!! See you next time !!!" << std::endl ; 
+                    std::cout << "Aim Training has been closed !!! See you next time !!!" << std::endl ; 
                     break;
             default:  // we don't handle the other event types 
             break;
@@ -274,15 +275,10 @@ void Game::render()
     this->avg_fps += fps/N ;  
     if(counter == N-1) // N-1 because the avg_fps increment occured N times
     {
-        std::cout << "Average FPS = " << last_fps_avg << "\n";
         counter= 0;
         last_fps_avg = this->avg_fps ;
         this->avg_fps = 0.f ;
     }
-    this->fps_txt.setString("FPS = "+std::to_string(last_fps_avg)); 
-    
+    this->fps_txt.setString("FPS = "+std::to_string(static_cast<int>(last_fps_avg))); 
     counter++;
-    // std::cout << "FPS = " << this->fps << "\n";
-
-
 }
