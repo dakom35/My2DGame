@@ -128,7 +128,7 @@ void Game::respawnEnemy(int i, bool isMonster)
     {
         size = enemy.getSize();  
         scale = enemy.getScale();  
-        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size2.x*scale2.x); // Numbers between 0 and (width - widthRectangle) 
+        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle) 
         Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)  
         if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
         if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
