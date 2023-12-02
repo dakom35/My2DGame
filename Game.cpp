@@ -102,7 +102,7 @@ void Game::initEnemies()
 
 
 
-void Game::respawnEnemy(int i,bool isMonster)
+void Game::respawnEnemy(int i, bool isMonster)
 {
     /* 
         @brief respawns the Enemy at a random position in the window
@@ -114,7 +114,7 @@ void Game::respawnEnemy(int i,bool isMonster)
     sf::Vector2f position,size,size2,scale,scale2 ;
     sf::RectangleShape enemy = this->enemyVector[i] ;
     sf::Sprite enemy2 = this->enemyVector2[i];
-    if(!isMonster)
+    if(isMonster)
     {
         size2 = this->sizeMonster ;
         scale2 = this->scaleMonster ;
