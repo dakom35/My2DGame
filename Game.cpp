@@ -164,8 +164,6 @@ const bool Game::running() const
 // as long as there is no event to handle...
 void Game::pollEvents()
 {
-    float fps ;
-
     // Event polling
     while(this->window->pollEvent(this->ev))
     {
