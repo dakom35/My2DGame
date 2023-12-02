@@ -94,6 +94,7 @@ class Game
             // render functions
             void render();
             void renderHUD(); 
+            void renderEnemies();
 
 };
 

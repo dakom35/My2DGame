@@ -253,17 +253,8 @@ void Game::render()
     static float last_fps_avg = 0.f ; // remember last avg_fps once computation is over
     
     // Draw game objects 
-    for (const auto& enemy : this->enemyVector) 
-    {
-        // Access and use the current element directly, useful if enemies are of different types
-        this->window->draw(enemy);
-    }
-    for (const auto& monster : this->enemyVector2) 
-    {
-        // Access and use the current element directly, useful if enemies are of different types
-        this->window->draw(monster);
-    }
 
+    this->renderEnemies();
     this->renderHUD(); 
 
     this->window->display();
@@ -284,11 +275,26 @@ void Game::render()
 
 void Game::renderHUD()
 /*
-    Functions to render every HUD objects (FPS,score,...)
+    Function to render every HUD objects (FPS,score,...)
 */
 {
     this->score_txt.setString("Score = "+std::to_string(score));
     this->window->draw(this->fps_txt);
     this->window->draw(this->score_txt);
 
+}
+
+void Game::renderEnemies()
+/*
+    Function to render every enemy 
+*/
+{
+    for (const auto& enemy : this->enemyVector) 
+    {
+        this->window->draw(enemy);
+    }
+    for (const auto& monster : this->enemyVector2) 
+    {
+        this->window->draw(monster);
+    }
 }
