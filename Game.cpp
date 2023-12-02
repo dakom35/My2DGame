@@ -74,9 +74,9 @@ void Game::initEnemies()
     float Xpos,Ypos ;
     sf::Vector2f size = {80.f,80.f}; 
     sf::Vector2f scale = {1.f,1.f};
-    this->sizeMonster1 = {static_cast<int>(textureMonster1.getSize().x),static_cast<int>(textureMonster1.getSize().y)};
+    // type conversions mandatory to make arithmetic operations with std::rand()
+    this->sizeMonster1 = {static_cast<int>(textureMonster1.getSize().x),static_cast<int>(textureMonster1.getSize().y)}; // type conversion mandatory to make arithmetic operations with std::rand()
     this->sizeMonster2 = {static_cast<int>(textureMonster2.getSize().x),static_cast<int>(textureMonster2.getSize().y)};
-    //this->sizeMonster2 = textureMonster2.getSize();
     enemy.setSize(size);
     enemy.setScale(scale);
     enemy.setFillColor(sf::Color::Red);
