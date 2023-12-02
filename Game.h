@@ -53,11 +53,15 @@ class Game
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
 
         //Game objects
-        std::vector<sf::RectangleShape> enemyVector;
-        std::vector<sf::Sprite> enemyVector2 ;
+        std::vector<sf::RectangleShape> enemyRectangleVector;
+        std::vector<sf::Sprite> enemyMonster1Vector ;
+        std::vector<sf::Sprite> enemyMonster2Vector ;
         sf::Vector2f sizeMonster = {80.f,80.f} ; 
         sf::Vector2f scaleMonster = {1.f,1.f}; 
-        sf::Texture textureMonster ;
+        sf::Texture textureMonster1 ;
+        sf::Texture textureMonster2 ;
+        sf::Vector2i sizeMonster1,sizeMonster2;
+        int sizeXMonster1,sizeXMonster2,sizeYMonster1,sizeYMonster2 ;
 
 
         // Writing on screen
@@ -65,15 +69,11 @@ class Game
         sf::Text fps_txt ;
         sf::Text score_txt ;
 
-
-
-
-
         // private functions
         int initVariables();
         void initWindow();
         void initEnemies();
-        void respawnEnemy(int i,bool monster);
+        void respawnEnemy(int i, int monsterNumber);
 
 
     public : 
@@ -88,15 +88,11 @@ class Game
         // Functions 
         void pollEvents();
         void update(); 
-         
         void shootingLogic();
 
             // render functions
             void render();
             void renderHUD(); 
             void renderEnemies();
-
 };
-
-
 #endif // GAME_H

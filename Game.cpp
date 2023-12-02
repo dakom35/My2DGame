@@ -3,23 +3,14 @@
 
 // Private functions 
 
-
-// void Game::initVariables()
-// {
-//     /*
-//             // access the member variable window of the current instance of the class 'Game'
-//             // 
-//     */
-//     this->window = nullptr ; 
-// }
-
 int Game::initVariables()
 {
     sf::Color semiTransparentGreen(64, 255, 64, 128);
     this->window = nullptr ;
     this->fps_max = 240 ; 
-    this->resX = 800 ; 
+    this->resX = 800 ;
     this->resY = 600 ;
+
     this->score = 0 ;
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
     if (!this->gunshotSoundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
@@ -28,7 +19,7 @@ int Game::initVariables()
         return -1;
     }
     this->painSound.setBuffer(painSoundBuffer); 
-        if (!this->painSoundBuffer.loadFromFile("pain-sound-1.wav"))
+    if (!this->painSoundBuffer.loadFromFile("pain-sound-1.wav"))
     {
         std::cerr << "The file for the painSound buffer is not found \n" ;
         return -1;
@@ -42,7 +33,7 @@ int Game::initVariables()
 //  Text (const String &string, const Font &font, unsigned int characterSize=30)
     this->fps_txt = sf::Text("FPS = ",font,15);
     this->fps_txt.setFillColor(semiTransparentGreen);
-    this->score_txt = sf::Text("Score =",font,15);
+    this->score_txt = sf::Text("Score = ",font,15);
     this->score_txt.setFillColor(semiTransparentGreen);
     this->score_txt.setPosition(0.f,20.f);
     return 0 ; 
@@ -59,25 +50,33 @@ void Game::initWindow()
     this->videoMode.width = resX ; 
     this->window = new sf::RenderWindow(this->videoMode, "Aim Training", sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(fps_max); //max_fps
-
 }
 
 void Game::initEnemies()
 {
-    
-    sf::Sprite spriteMonster; 
+     
+    sf::Sprite spriteMonster1,spriteMonster2 ;
     sf::RectangleShape enemy;
     int numberOfEnemies = 5 ;
-    if(!this->textureMonster.loadFromFile("Images/monster1.png"))
+    //int enemyCategories = 3 ; // rectangle,monster1 and monster2
+    if(!this->textureMonster1.loadFromFile("Images/monster1.png"))
     {
         std::cerr << "The image was not found \n" ;
     }
-    spriteMonster.setTexture(this->textureMonster);
+    spriteMonster1.setTexture(this->textureMonster1);
+    if(!this->textureMonster2.loadFromFile("Images/monster2.png"))
+    {
+        std::cerr << "The image was not found \n" ;
+    }
+    spriteMonster2.setTexture(this->textureMonster2);
 
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
-    float Xpos,Xpos2,Ypos,Ypos2 ;
+    float Xpos,Ypos ;
     sf::Vector2f size = {80.f,80.f}; 
     sf::Vector2f scale = {1.f,1.f};
+    this->sizeMonster1 = {static_cast<int>(textureMonster1.getSize().x),static_cast<int>(textureMonster1.getSize().y)};
+    this->sizeMonster2 = {static_cast<int>(textureMonster2.getSize().x),static_cast<int>(textureMonster2.getSize().y)};
+    //this->sizeMonster2 = textureMonster2.getSize();
     enemy.setSize(size);
     enemy.setScale(scale);
     enemy.setFillColor(sf::Color::Red);
@@ -85,55 +84,83 @@ void Game::initEnemies()
     enemy.setOutlineThickness(5.f);
     for(int i = 0; i < numberOfEnemies ; i++) 
     {
-        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
-        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
-        Xpos2 = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthMonster)
-        Ypos2 = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightMonster)
+        Xpos = static_cast<float>(std::rand() % this->resX - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
+        Ypos = static_cast<float>(std::rand() % this->resY - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
         if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
         if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
-        if(Xpos2 < 0) Xpos2 += size.x*scale.x ; // fast way to prevent spawn to the left of window
-        if(Ypos2 < 0 ) Ypos2 += size.y*scale.y ; // fast way to prevent spawn above of window
-        enemy.setPosition(Xpos,Ypos);
-        spriteMonster.setPosition(Xpos2,Ypos2);
-        this->enemyVector.push_back(enemy);
-        this->enemyVector2.push_back(spriteMonster);
+        enemy.setPosition(Xpos,Ypos);   
+        this->enemyRectangleVector.push_back(enemy);
     } 
+    for(int i = 0 ; i < numberOfEnemies ; i++)
+    {
+        Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
+        Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster1.y); // numbers between 0 and (height - heightMonster)
+        if(Xpos < 0) Xpos += this->sizeMonster1.x ; // fast way to prevent spawn to the left of window
+        if(Ypos < 0 ) Ypos += this->sizeMonster1.y ; // fast way to prevent spawn above of window
+        spriteMonster1.setPosition(Xpos,Ypos);
+        this->enemyMonster1Vector.push_back(spriteMonster1);
+    }
+    for(int i = 0 ; i < numberOfEnemies ; i++)
+    {
+        Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster2.x); // Numbers between 0 and (width - widthMonster)
+        Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster2.y); // numbers between 0 and (height - heightMonster)
+        
+        if(Xpos < 0) Xpos += this->sizeMonster2.x ; // fast way to prevent spawn to the left of window
+        if(Ypos < 0 ) Ypos += this->sizeMonster2.y ; // fast way to prevent spawn above of window
+        spriteMonster2.setPosition(Xpos,Ypos);
+        this->enemyMonster2Vector.push_back(spriteMonster2);
+    }
 }
 
 
 
-void Game::respawnEnemy(int i, bool isMonster)
+void Game::respawnEnemy(int i, int monsterNumber)
 {
     /* 
         @brief respawns the Enemy at a random position in the window
         @return void
-        @param i is the ennemy's number in the enemyVector
-                isMonster says if it's a rectangle or a real monster (sprite)
+        @param i is the ennemy's number in the enemyRectangleVector
+                monsterNumber : 
+                                0 -> rectangle
+                                1 -> monster1
+                                2 -> monster2
     */
-    float Xpos,Ypos,Xpos2,Ypos2;
-    sf::Vector2f position,size,size2,scale,scale2 ;
-    sf::RectangleShape enemy = this->enemyVector[i] ;
-    sf::Sprite enemy2 = this->enemyVector2[i];
-    if(isMonster)
+    float Xpos,Ypos;
+    sf::Vector2f position,size,scale ;
+    sf::RectangleShape enemy = this->enemyRectangleVector[i] ;
+    switch(monsterNumber)
     {
-        size2 = this->sizeMonster ;
-        scale2 = this->scaleMonster ;
-        Xpos2 = static_cast<float>(std::rand() % this->videoMode.width+1 - size2.x*scale2.x); // Numbers between 0 and (width - widthMonster)
-        Ypos2 = static_cast<float>(std::rand() % this->videoMode.height+1 - size2.y*scale2.y); // numbers between 0 and (height - heightRectangle)
-        if(Xpos2 < 0) Xpos2 += size2.x*scale2.x ; // fast way to prevent spawn to the left of window
-        if(Ypos2 < 0 ) Ypos2 += size2.y*scale2.y ; // fast way to prevent spawn above of window
-        this->enemyVector2[i].setPosition(Xpos2,Ypos2);
-    }
-    else
-    {
-        size = enemy.getSize();  
-        scale = enemy.getScale();  
-        Xpos = static_cast<float>(std::rand() % this->videoMode.width+1 - size.x*scale.x); // Numbers between 0 and (width - widthRectangle) 
-        Ypos = static_cast<float>(std::rand() % this->videoMode.height+1 - size.y*scale.y); // numbers between 0 and (height - heightRectangle)  
-        if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
-        if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
-        this->enemyVector[i].setPosition(Xpos,Ypos);
-    }   
+        case 0 : 
+            size = enemy.getSize();  
+            scale = enemy.getScale();  
+            Xpos = static_cast<float>(std::rand() % this->videoMode.width - size.x*scale.x); // Numbers between 0 and (width - widthRectangle) 
+            Ypos = static_cast<float>(std::rand() % this->videoMode.height - size.y*scale.y); // numbers between 0 and (height - heightRectangle)  
+            if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
+            if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
+            this->enemyRectangleVector[i].setPosition(Xpos,Ypos);   
+            break;
+
+        case 1 :      
+            Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
+            Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster1.y); // numbers between 0 and (height - heightRectangle)
+            if(Xpos < 0) Xpos += this->sizeMonster1.x ; // fast way to prevent spawn to the left of window
+            if(Ypos < 0 ) Ypos += this->sizeMonster1.y ; // fast way to prevent spawn above of window
+            this->enemyMonster1Vector[i].setPosition(Xpos,Ypos);
+            std::cerr << "Xpos = " << Xpos << " Ypos = " << Ypos << std::endl ; 
+            break;
+
+        case 2 : 
+
+            Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster2.x); // Numbers between 0 and (width - widthMonster)
+            Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster2.y); // numbers between 0 and (height - heightRectangle)
+            if(Xpos < 0) Xpos += this->sizeMonster2.x ; // fast way to prevent spawn to the left of window
+            if(Ypos < 0 ) Ypos += this->sizeMonster2.y ; // fast way to prevent spawn above of window
+            this->enemyMonster2Vector[i].setPosition(Xpos,Ypos);
+            std::cerr << "Xpos = " << Xpos << " Ypos = " << Ypos << std::endl ; 
+            break;
+        default:
+            std::cerr << "Invalid choice in switch/case" << std::endl;
+    } 
 }
 
 
@@ -192,10 +219,8 @@ void Game::shootingLogic()
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
    static bool leftClickActive = false ;
-   sf::FloatRect enemyBounds,enemyBounds2 ;
-   sf::Rect<float> rectEnemyBounds,rectEnemyBounds2 ;
-   //sf::Event event;
-
+   sf::FloatRect enemyBounds,monster1Bounds,monster2Bounds ;
+   sf::Rect<float> rectEnemyBounds,rectMonster1Bounds,rectMonster2Bounds;
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
     {  // Fire the shot only if the mouse button was not pressed before
@@ -203,24 +228,31 @@ void Game::shootingLogic()
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-        for(size_t i = 0; i<this->enemyVector.size(); i++) 
+        for(size_t i = 0; i<this->enemyRectangleVector.size(); i++) 
         {
-            enemyBounds = this->enemyVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
-            enemyBounds2 = this->enemyVector2[i].getGlobalBounds(); // Get the global bounds of the monster
-            
+            enemyBounds = this->enemyRectangleVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
+            monster1Bounds = this->enemyMonster1Vector[i].getGlobalBounds(); // Get the global bounds of the monster1
+            monster2Bounds = this->enemyMonster2Vector[i].getGlobalBounds(); // Get the global bounds of the monster2
             rectEnemyBounds = sf::Rect(enemyBounds.left, enemyBounds.top, enemyBounds.width, enemyBounds.height); // Convert the FloatRect to Rect
-            rectEnemyBounds2 = sf::Rect(enemyBounds2.left, enemyBounds2.top, enemyBounds2.width, enemyBounds2.height) ;
+            rectMonster1Bounds = sf::Rect(monster1Bounds.left, monster1Bounds.top, monster1Bounds.width, monster1Bounds.height) ;
+            rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height) ;
             if(rectEnemyBounds.contains(floatMousePos)) 
             {
                 this->painSound.play();
                 this->score++; 
-                respawnEnemy(i,false);
+                respawnEnemy(i,0);
             }
-            if(rectEnemyBounds2.contains(floatMousePos))
+            if(rectMonster1Bounds.contains(floatMousePos))
             {
                 this->painSound.play();
                 this->score++; 
-                respawnEnemy(i,true); 
+                respawnEnemy(i,1); 
+            }
+            if(rectMonster2Bounds.contains(floatMousePos))
+            {
+                this->painSound.play();
+                this->score++; 
+                respawnEnemy(i,2); 
             }
         }     
     }  
@@ -235,7 +267,6 @@ void Game::update()
     this->start = std::chrono::high_resolution_clock::now(); 
     this->pollEvents(); 
     this->shootingLogic();
-
 }
 
 void Game::render()
@@ -247,19 +278,14 @@ void Game::render()
         - display frame 
         Renders the game objects .
     */
-   this->window->clear(sf::Color::Black);
+    this->window->clear(sf::Color::Black);
     static int counter = 0 ; // counts the number of frames up to N
     const int N = 500 ; // number of samples used by the average process
     static float last_fps_avg = 0.f ; // remember last avg_fps once computation is over
-    
     // Draw game objects 
-
     this->renderEnemies();
     this->renderHUD(); 
-
     this->window->display();
-    
-
     this->end = std::chrono::high_resolution_clock::now(); 
     this->fps = (float)1e9/(float)std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count(); 
     this->avg_fps += fps/N ;  
@@ -289,11 +315,15 @@ void Game::renderEnemies()
     Function to render every enemy 
 */
 {
-    for (const auto& enemy : this->enemyVector) 
+    for (const auto& enemy : this->enemyRectangleVector) 
     {
         this->window->draw(enemy);
     }
-    for (const auto& monster : this->enemyVector2) 
+    for (const auto& monster : this->enemyMonster1Vector) 
+    {
+        this->window->draw(monster);
+    }
+    for (const auto& monster : this->enemyMonster2Vector) 
     {
         this->window->draw(monster);
     }
