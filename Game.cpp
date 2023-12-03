@@ -56,7 +56,7 @@ void Game::initEnemies()
 {
      
     sf::Sprite spriteMonster1,spriteMonster2 ;
-    int numberOfEnemies = 2 ;
+    int numberOfEnemies = 4 ;
     //int enemyCategories = 3 ; // rectangle,monster1 and monster2
     if(!this->textureMonster1.loadFromFile("Images/monster1.png"))
     {
