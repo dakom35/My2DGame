@@ -56,7 +56,7 @@ void Game::initEnemies()
 {
      
     sf::Sprite spriteMonster1,spriteMonster2 ;
-    int numberOfEnemies = 5 ;
+    int numberOfEnemies = 2 ;
     //int enemyCategories = 3 ; // rectangle,monster1 and monster2
     if(!this->textureMonster1.loadFromFile("Images/monster1.png"))
     {
@@ -192,14 +192,14 @@ void Game::shootingLogic()
         this->gunshotSound.play();
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
-        sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+        sf::Vector2f floatMousePos(static_cast<float>(mousePos.x),static_cast<float>(mousePos.y));
         for(size_t i = 0; i<this->enemyMonster1Vector.size(); i++) 
         {
             monster1Bounds = this->enemyMonster1Vector[i].getGlobalBounds(); // Get the global bounds of the monster1
             monster2Bounds = this->enemyMonster2Vector[i].getGlobalBounds(); // Get the global bounds of the monster2
             // type conversion : FloatRect -> Rect (to use contains())
-            rectMonster1Bounds = sf::Rect(monster1Bounds.left, monster1Bounds.top, monster1Bounds.width, monster1Bounds.height) ;
-            rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height) ;
+            rectMonster1Bounds = sf::Rect(monster1Bounds.left, monster1Bounds.top, monster1Bounds.width, monster1Bounds.height);
+            rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height);
             if(rectMonster1Bounds.contains(floatMousePos))
             {
                 this->painSound.play();
