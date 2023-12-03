@@ -53,18 +53,14 @@ class Game
         sf::Vector2i mousePosWindow ; // this pos of mouse is relative to game's window 
 
         //Game objects
-        std::vector<sf::RectangleShape> enemyRectangleVector;
-        std::vector<sf::Sprite> enemyMonster1Vector ;
-        std::vector<sf::Sprite> enemyMonster2Vector ;
-        sf::Vector2f sizeMonster = {80.f,80.f} ; 
-        sf::Vector2f scaleMonster = {1.f,1.f}; 
-        sf::Texture textureMonster1 ;
-        sf::Texture textureMonster2 ;
+        //std::vector<sf::RectangleShape> enemyRectangleVector;
+        std::vector<sf::Sprite> enemyMonster1Vector ; // round brown monster
+        std::vector<sf::Sprite> enemyMonster2Vector ; // snake-like monster
+        sf::Texture textureMonster1,textureMonster2 ;
         sf::Vector2i sizeMonster1,sizeMonster2;
-        int sizeXMonster1,sizeXMonster2,sizeYMonster1,sizeYMonster2 ;
 
 
-        // Writing on screen
+        // Writing on screen (HUD)
         sf::Font font; // font for every text in HUD
         sf::Text fps_txt ;
         sf::Text score_txt ;

@@ -56,7 +56,6 @@ void Game::initEnemies()
 {
      
     sf::Sprite spriteMonster1,spriteMonster2 ;
-    sf::RectangleShape enemy;
     int numberOfEnemies = 5 ;
     //int enemyCategories = 3 ; // rectangle,monster1 and monster2
     if(!this->textureMonster1.loadFromFile("Images/monster1.png"))
@@ -69,28 +68,11 @@ void Game::initEnemies()
         std::cerr << "The image was not found \n" ;
     }
     spriteMonster2.setTexture(this->textureMonster2);
-
     std::srand(static_cast<unsigned int>(std::time(nullptr))); // seed rnd # generator
     float Xpos,Ypos ;
-    sf::Vector2f size = {80.f,80.f}; 
-    sf::Vector2f scale = {1.f,1.f};
     // type conversions mandatory to make arithmetic operations with std::rand()
-    this->sizeMonster1 = {static_cast<int>(textureMonster1.getSize().x),static_cast<int>(textureMonster1.getSize().y)}; // type conversion mandatory to make arithmetic operations with std::rand()
+    this->sizeMonster1 = {static_cast<int>(textureMonster1.getSize().x),static_cast<int>(textureMonster1.getSize().y)}; 
     this->sizeMonster2 = {static_cast<int>(textureMonster2.getSize().x),static_cast<int>(textureMonster2.getSize().y)};
-    enemy.setSize(size);
-    enemy.setScale(scale);
-    enemy.setFillColor(sf::Color::Red);
-    enemy.setOutlineColor(sf::Color::White);
-    enemy.setOutlineThickness(5.f);
-    for(int i = 0; i < numberOfEnemies ; i++) 
-    {
-        Xpos = static_cast<float>(std::rand() % this->resX - size.x*scale.x); // Numbers between 0 and (width - widthRectangle)
-        Ypos = static_cast<float>(std::rand() % this->resY - size.y*scale.y); // numbers between 0 and (height - heightRectangle)
-        if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
-        if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
-        enemy.setPosition(Xpos,Ypos);   
-        this->enemyRectangleVector.push_back(enemy);
-    } 
     for(int i = 0 ; i < numberOfEnemies ; i++)
     {
         Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
@@ -121,48 +103,30 @@ void Game::respawnEnemy(int i, int monsterNumber)
         @return void
         @param i is the ennemy's number in the enemyRectangleVector
                 monsterNumber : 
-                                0 -> rectangle
                                 1 -> monster1
                                 2 -> monster2
     */
     float Xpos,Ypos;
-    sf::Vector2f position,size,scale ;
-    sf::RectangleShape enemy = this->enemyRectangleVector[i] ;
     switch(monsterNumber)
     {
-        case 0 : 
-            size = enemy.getSize();  
-            scale = enemy.getScale();  
-            Xpos = static_cast<float>(std::rand() % this->videoMode.width - size.x*scale.x); // Numbers between 0 and (width - widthRectangle) 
-            Ypos = static_cast<float>(std::rand() % this->videoMode.height - size.y*scale.y); // numbers between 0 and (height - heightRectangle)  
-            if(Xpos < 0) Xpos += size.x*scale.x ; // fast way to prevent spawn to the left of window
-            if(Ypos < 0 ) Ypos += size.y*scale.y ; // fast way to prevent spawn above of window
-            this->enemyRectangleVector[i].setPosition(Xpos,Ypos);   
-            break;
-
         case 1 :      
             Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
             Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster1.y); // numbers between 0 and (height - heightRectangle)
             if(Xpos < 0) Xpos += this->sizeMonster1.x ; // fast way to prevent spawn to the left of window
             if(Ypos < 0 ) Ypos += this->sizeMonster1.y ; // fast way to prevent spawn above of window
             this->enemyMonster1Vector[i].setPosition(Xpos,Ypos);
-            std::cerr << "Xpos = " << Xpos << " Ypos = " << Ypos << std::endl ; 
             break;
-
         case 2 : 
-
             Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster2.x); // Numbers between 0 and (width - widthMonster)
             Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster2.y); // numbers between 0 and (height - heightRectangle)
             if(Xpos < 0) Xpos += this->sizeMonster2.x ; // fast way to prevent spawn to the left of window
             if(Ypos < 0 ) Ypos += this->sizeMonster2.y ; // fast way to prevent spawn above of window
             this->enemyMonster2Vector[i].setPosition(Xpos,Ypos);
-            std::cerr << "Xpos = " << Xpos << " Ypos = " << Ypos << std::endl ; 
             break;
         default:
             std::cerr << "Invalid choice in switch/case" << std::endl;
     } 
 }
-
 
 // constructors / destructors 
 
@@ -219,8 +183,8 @@ void Game::shootingLogic()
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
    static bool leftClickActive = false ;
-   sf::FloatRect enemyBounds,monster1Bounds,monster2Bounds ;
-   sf::Rect<float> rectEnemyBounds,rectMonster1Bounds,rectMonster2Bounds;
+   sf::FloatRect monster1Bounds,monster2Bounds ;
+   sf::Rect<float> rectMonster1Bounds,rectMonster2Bounds;
    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
     {  // Fire the shot only if the mouse button was not pressed before
@@ -228,20 +192,13 @@ void Game::shootingLogic()
         leftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-        for(size_t i = 0; i<this->enemyRectangleVector.size(); i++) 
+        for(size_t i = 0; i<this->enemyMonster1Vector.size(); i++) 
         {
-            enemyBounds = this->enemyRectangleVector[i].getGlobalBounds(); // Get the global bounds of the RectangleShape
             monster1Bounds = this->enemyMonster1Vector[i].getGlobalBounds(); // Get the global bounds of the monster1
             monster2Bounds = this->enemyMonster2Vector[i].getGlobalBounds(); // Get the global bounds of the monster2
-            rectEnemyBounds = sf::Rect(enemyBounds.left, enemyBounds.top, enemyBounds.width, enemyBounds.height); // Convert the FloatRect to Rect
+            // type conversion : FloatRect -> Rect (to use contains())
             rectMonster1Bounds = sf::Rect(monster1Bounds.left, monster1Bounds.top, monster1Bounds.width, monster1Bounds.height) ;
             rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height) ;
-            if(rectEnemyBounds.contains(floatMousePos)) 
-            {
-                this->painSound.play();
-                this->score++; 
-                respawnEnemy(i,0);
-            }
             if(rectMonster1Bounds.contains(floatMousePos))
             {
                 this->painSound.play();
@@ -315,10 +272,6 @@ void Game::renderEnemies()
     Function to render every enemy 
 */
 {
-    for (const auto& enemy : this->enemyRectangleVector) 
-    {
-        this->window->draw(enemy);
-    }
     for (const auto& monster : this->enemyMonster1Vector) 
     {
         this->window->draw(monster);
