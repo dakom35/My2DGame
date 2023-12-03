@@ -14,7 +14,7 @@ Developer's journal :
 
 TODO : 
     1) get a faster pseudo random number generator such as Xoshiro256+ (done with hash())
-    2) check if game could benefit from std::thread
+    2) check if game could benefit from std::thread (game is not laggy anymore so later maybe)
     3) make different screams for the monsters when they are shot 
 
 
