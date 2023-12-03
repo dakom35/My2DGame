@@ -12,6 +12,9 @@ Credits :
 
 Developer's journal : 
 
-TODO : get a faster pseudo random number generator such as Xoshiro256+ 
+TODO : 
+    1) get a faster pseudo random number generator such as Xoshiro256+ (done with hash())
+    2) check if game could benefit from std::thread
+    3) make different screams for the monsters when they are shot 
 
 
