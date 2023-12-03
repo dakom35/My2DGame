@@ -186,7 +186,7 @@ void Game::shootingLogic()
    static bool leftClickActive = false ;
    sf::FloatRect monster1Bounds,monster2Bounds ;
    sf::Rect<float> rectMonster1Bounds,rectMonster2Bounds;
-   this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+   //this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
     {  // Fire the shot only if the mouse button was not pressed before
         this->gunshotSound.play();
