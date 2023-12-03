@@ -99,7 +99,7 @@ void Game::initEnemies()
 void Game::respawnEnemy(int i, int monsterNumber)
 {
     /* 
-        @brief respawns the Enemy at a random position in the window
+        @brief respawns the Enemy at a pseudo-random position in the window
         @return void
         @param i is the ennemy's number in the enemyRectangleVector
                 monsterNumber : 
@@ -107,18 +107,19 @@ void Game::respawnEnemy(int i, int monsterNumber)
                                 2 -> monster2
     */
     float Xpos,Ypos;
+
     switch(monsterNumber)
     {
-        case 1 :      
-            Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
-            Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster1.y); // numbers between 0 and (height - heightRectangle)
+        case 1 :     
+            Xpos = static_cast<float>(hash() % this->resX - this->sizeMonster1.x); // Numbers between 0 and (width - widthMonster)
+            Ypos = static_cast<float>(hash() % this->resY - this->sizeMonster1.y); // numbers between 0 and (height - heightRectangle)
             if(Xpos < 0) Xpos += this->sizeMonster1.x ; // fast way to prevent spawn to the left of window
             if(Ypos < 0 ) Ypos += this->sizeMonster1.y ; // fast way to prevent spawn above of window
             this->enemyMonster1Vector[i].setPosition(Xpos,Ypos);
             break;
         case 2 : 
-            Xpos = static_cast<float>(std::rand() % this->resX - this->sizeMonster2.x); // Numbers between 0 and (width - widthMonster)
-            Ypos = static_cast<float>(std::rand() % this->resY - this->sizeMonster2.y); // numbers between 0 and (height - heightRectangle)
+            Xpos = static_cast<float>(hash() % this->resX - this->sizeMonster2.x); // Numbers between 0 and (width - widthMonster)
+            Ypos = static_cast<float>(hash() % this->resY - this->sizeMonster2.y); // numbers between 0 and (height - heightRectangle)
             if(Xpos < 0) Xpos += this->sizeMonster2.x ; // fast way to prevent spawn to the left of window
             if(Ypos < 0 ) Ypos += this->sizeMonster2.y ; // fast way to prevent spawn above of window
             this->enemyMonster2Vector[i].setPosition(Xpos,Ypos);
@@ -280,4 +281,15 @@ void Game::renderEnemies()
     {
         this->window->draw(monster);
     }
+}
+
+int Game::hash()
+{
+    static int a = std::rand(); // seed rnd number generator (only done once)
+    a = (a ^ 61) ^ (a >> 16);
+    a = a + (a << 3);
+    a = a ^ (a >> 4);
+    a = a * 0x27d4eb2d;
+    a = a ^ (a >> 15);
+    return a;
 }

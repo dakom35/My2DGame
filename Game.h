@@ -36,8 +36,8 @@ class Game
         sf::Event ev ; // Every event 
         //sf::Clock clock ; 
         int fps_max  ; // maximum fps rate
-        int resX ; // X resolution
-        int resY  ; // Y resolution
+        int resX ; // X resolution of the game's window
+        int resY  ; // Y resolution of the game's window
         unsigned int score ; // score of the player
         float fps ; // fps calculated with 1 frame
         float avg_fps ; // average fps measure performed on multiple frames,
@@ -70,6 +70,7 @@ class Game
         void initWindow();
         void initEnemies();
         void respawnEnemy(int i, int monsterNumber);
+        int hash(); 
 
 
     public : 
