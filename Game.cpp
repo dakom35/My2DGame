@@ -170,6 +170,13 @@ void Game::pollEvents()
                     this->window->close();
                     std::cout << "Aim Training has been closed !!! See you next time !!!" << std::endl ; 
                     break;
+            case sf::Event::MouseButtonPressed  : 
+                if(this->ev.mouseButton.button == sf::Mouse::Left) // shoot weapon
+                    shootingLogic(true);
+            case sf::Event::MouseButtonReleased :
+                if(this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left)
+                    shootingLogic(false);
+
             default:  // we don't handle the other event types 
             break;
         }
@@ -177,19 +184,20 @@ void Game::pollEvents()
 }
 
 
-void Game::shootingLogic()
+void Game::shootingLogic(bool isleftClickPressed)
 {
     /*
         @return void
         @brief check if user clicks on enemies, if so respawn them elsewhere
     */
-   static bool leftClickActive = false ;
+
+   static bool isLeftClickActive = false ;
    sf::FloatRect monster1Bounds,monster2Bounds ;
    sf::Rect<float> rectMonster1Bounds,rectMonster2Bounds;
-    if(this->ev.type == sf::Event::MouseButtonPressed && this->ev.mouseButton.button == sf::Mouse::Left && !leftClickActive) 
-    {  // Fire the shot only if the mouse button was not pressed before
+    if(isleftClickPressed && !isLeftClickActive) // Fire the shot only if the mouse button was not pressed before
+    {  
         this->gunshotSound.play();
-        leftClickActive = true ;
+        isLeftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x),static_cast<float>(mousePos.y));
         for(size_t i = 0; i<this->enemyMonster1Vector.size(); i++) 
@@ -213,9 +221,9 @@ void Game::shootingLogic()
             }
         }     
     }  
-    else if(this->ev.type == sf::Event::MouseButtonReleased && this->ev.mouseButton.button == sf::Mouse::Left) 
+    else
     {       
-        leftClickActive = false; // Reset the flag when the mouse button is released 
+        isLeftClickActive = false; // Reset the flag when the mouse button is released 
     }  
 }
 
@@ -223,7 +231,7 @@ void Game::update()
 {
     this->start = std::chrono::high_resolution_clock::now(); 
     this->pollEvents(); 
-    this->shootingLogic();
+    //this->shootingLogic();
 }
 
 void Game::render()

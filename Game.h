@@ -85,7 +85,7 @@ class Game
         // Functions 
         void pollEvents();
         void update(); 
-        void shootingLogic();
+        void shootingLogic(bool isleftClickPressed);
 
             // render functions
             void render();
