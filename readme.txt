@@ -10,7 +10,7 @@ Credits :
     SFML tutorial in C++ : https://www.youtube.com/playlist?list=PL6xSOsbVA1eb_QqMTTcql_3PdOiE928up (author : SurajSharmaFourKnob )
     Monster sprite : Stephen "Redshrike" Challener (Sprites) 5hiroi (concepts) Heather Lee Harvey (concept) (EmeraldActivities.com) www.OpenGameArt.org
     Sounds (freesound.org) : 
-        -> Monster1's death sound :  by scorpion67890 (Licence : CC BY-NC 3.0 DEED) 
+        -> Monster1's death sound :  by Michel88 (Licence : CC SAMPLING+ 1.0 DEED) 
         -> Monster2's death sound : by SoundFlakes (Licence : CC BY 4.0 DEED)
 
 Developer's journal : 
