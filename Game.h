@@ -42,10 +42,10 @@ class Game
         float fps ; // fps calculated with 1 frame
         float avg_fps ; // average fps measure performed on multiple frames,
                         // a few instructions are ignored => increases inacurracy
-        sf::SoundBuffer gunshotSoundBuffer;
-        sf::SoundBuffer painSoundBuffer;
+        sf::SoundBuffer gunshotSoundBuffer; // gun firing sound
+        sf::SoundBuffer painSoundBufMonster1,painSoundBufMonster2; // death screams of the monsters
         sf::Sound gunshotSound; // sound of firing weapon
-        sf::Sound painSound ; // sound of the enemy dying
+        sf::Sound painSoundMonster1,painSoundMonster2 ; // sound of the enemy dying
         std::chrono::high_resolution_clock::time_point start; // for fps measurement
         std::chrono::high_resolution_clock::time_point end; // for fps measurement
 

@@ -15,19 +15,25 @@ int Game::initVariables()
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
     if (!this->gunshotSoundBuffer.loadFromFile("Sounds/9mm-pistol-shot-crop.wav"))
     {
-        std::cerr << "The file for the gunshotSound buffer is not found \n" ;
+        std::cerr << "The file for the gunshotSound buffer is not found" << std::endl ;
         return -1;
     }
-    this->painSound.setBuffer(painSoundBuffer); 
-    if (!this->painSoundBuffer.loadFromFile("Sounds/pain-sound-1.wav"))
+    this->painSoundMonster1.setBuffer(painSoundBufMonster1); 
+    if (!this->painSoundBufMonster1.loadFromFile("Sounds/monster1bis.wav"))
     {
-        std::cerr << "The file for the painSound buffer is not found \n" ;
+        std::cerr << "The file for monster1's scream is not found" << std::endl ;
+        return -1;
+    }
+    this->painSoundMonster2.setBuffer(painSoundBufMonster2); 
+    if (!this->painSoundBufMonster2.loadFromFile("Sounds/monster2.wav"))
+    {
+        std::cerr << "The file for monster2's scream is not found" << std::endl ;
         return -1;
     }
     this->gunshotSound.setBuffer(gunshotSoundBuffer); 
     if (!this->font.loadFromFile("Fonts/arial.ttf"))
     {
-        std::cerr << "The font was not found \n" ;
+        std::cerr << "The font was not found" << std::endl ;
         return -1 ; 
     }
 //  Text (const String &string, const Font &font, unsigned int characterSize=30)
@@ -209,13 +215,13 @@ void Game::shootingLogic(bool isleftClickPressed)
             rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height);
             if(rectMonster1Bounds.contains(floatMousePos))
             {
-                this->painSound.play();
+                this->painSoundMonster1.play();
                 this->score++; 
                 respawnEnemy(i,1); 
             }
             if(rectMonster2Bounds.contains(floatMousePos))
             {
-                this->painSound.play();
+                this->painSoundMonster2.play();
                 this->score++; 
                 respawnEnemy(i,2); 
             }
