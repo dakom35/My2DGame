@@ -13,13 +13,13 @@ int Game::initVariables()
 
     this->score = 0 ;
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
-    if (!this->gunshotSoundBuffer.loadFromFile("9mm-pistol-shot-crop.wav"))
+    if (!this->gunshotSoundBuffer.loadFromFile("Sounds/9mm-pistol-shot-crop.wav"))
     {
         std::cerr << "The file for the gunshotSound buffer is not found \n" ;
         return -1;
     }
     this->painSound.setBuffer(painSoundBuffer); 
-    if (!this->painSoundBuffer.loadFromFile("pain-sound-1.wav"))
+    if (!this->painSoundBuffer.loadFromFile("Sounds/pain-sound-1.wav"))
     {
         std::cerr << "The file for the painSound buffer is not found \n" ;
         return -1;
