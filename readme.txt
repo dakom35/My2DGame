@@ -13,7 +13,14 @@ Credits :
     Monster sprite : Stephen "Redshrike" Challener (Sprites) 5hiroi (concepts) Heather Lee Harvey (concept) (EmeraldActivities.com) www.OpenGameArt.org
     Sounds (freesound.org) : 
         -> Monster1's death sound :  by Michel88 (Licence : CC SAMPLING+ 1.0 DEED) 
+        -> Monster1 bis death sound : by bananplyte (Licence : Creative Commons 0) 
         -> Monster2's death sound : by SoundFlakes (Licence : CC BY 4.0 DEED)
+    Music :
+        -> Phobos by Lone Peak Music 
+            -> Youtube : https://www.youtube.com/watch?v=1HV3PN3g7fQ&list=PLsVfn9YIFmNA5BbgWyjLZ4MlDEemQqa7C
+            -> hosting site : https://lonepeakmusic.bandcamp.com/
+            -> Licence : Attribution 3.0 Unported (CC BY 3.0)
+
 
 Developer's journal : 
 

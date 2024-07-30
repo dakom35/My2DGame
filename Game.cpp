@@ -13,7 +13,14 @@ int Game::initVariables()
 
     this->score = 0 ;
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
-    if (!this->gunshotSoundBuffer.loadFromFile("Sounds/9mm-pistol-shot-crop.wav"))
+    if (!this->music1Buf.loadFromFile("Sounds/Phobos.wav"))
+    {
+        std::cerr << "The file for the music is not found" << std::endl ;
+        return -1;
+    }
+    this->music1.setBuffer(music1Buf);
+    this->music1.play(); 
+    if (!this->gunshotSoundBuf.loadFromFile("Sounds/9mm-pistol-shot-crop.wav"))
     {
         std::cerr << "The file for the gunshotSound buffer is not found" << std::endl ;
         return -1;
@@ -30,7 +37,7 @@ int Game::initVariables()
         std::cerr << "The file for monster2's scream is not found" << std::endl ;
         return -1;
     }
-    this->gunshotSound.setBuffer(gunshotSoundBuffer); 
+    this->gunshotSound.setBuffer(gunshotSoundBuf); 
     if (!this->font.loadFromFile("Fonts/arial.ttf"))
     {
         std::cerr << "The font was not found" << std::endl ;
