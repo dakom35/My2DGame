@@ -3,8 +3,10 @@ The goal is to "shoot" the monsters popping on the screen : a good aim warm-up.
 
 
 This is the command to compile and generate the executable game file : 
-
-    g++ -o Aim_Training main.cpp Game.cpp -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
+    Linux : 
+        g++ -o Aim_Training main.cpp Game.cpp -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
+    Windows :
+        g++ -o Aim_Training main.cpp Game.cpp -IC:\SFML\include\ -LC:\SFML\lib\ -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
  
 Credits : 
     SFML tutorial in C++ : https://www.youtube.com/playlist?list=PL6xSOsbVA1eb_QqMTTcql_3PdOiE928up (author : SurajSharmaFourKnob )
