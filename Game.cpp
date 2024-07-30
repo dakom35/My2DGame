@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "wtypes.h" #TODO : see if it works on Linux, make a bugs.txt
 
 // Private functions 
 
@@ -7,37 +7,45 @@ int Game::initVariables()
 {
     sf::Color semiTransparentGreen(64, 255, 64, 128);
     this->window = nullptr ;
-    this->fps_max = 240 ; 
+    this->fps_max = 60 ; 
     this->resX = 800 ;
     this->resY = 600 ;
 
     this->score = 0 ;
     this->avg_fps = 0 ; // initialize value to render it first ever frame (see fps_txt)
-    if (!this->music1Buf.loadFromFile("Sounds/Phobos.wav"))
-    {
+
+    // Set music
+    if (!this->music1Buf.loadFromFile("Sounds/Phobos.wav")){
         std::cerr << "The file for the music is not found" << std::endl ;
         return -1;
     }
     this->music1.setBuffer(music1Buf);
     this->music1.play(); 
-    if (!this->gunshotSoundBuf.loadFromFile("Sounds/9mm-pistol-shot-crop.wav"))
-    {
-        std::cerr << "The file for the gunshotSound buffer is not found" << std::endl ;
+    this->music1.setLoop(true);
+
+    // Set weapon sound
+    if (!this->gunshotBuf.loadFromFile("Sounds/9mm-pistol-shot-crop.wav")){
+        std::cerr << "The file for the gunshot's sound buffer is not found" << std::endl ;
         return -1;
     }
-    this->painSoundMonster1.setBuffer(painSoundBufMonster1); 
-    if (!this->painSoundBufMonster1.loadFromFile("Sounds/monster1bis.wav"))
-    {
+    this->gunshot.setBuffer(gunshotBuf); 
+    this->gunshot.setVolume(50.f);
+
+    // Set monster1 sound
+    if (!this->screamMonster1Buf.loadFromFile("Sounds/monster1bis.wav")){
         std::cerr << "The file for monster1's scream is not found" << std::endl ;
         return -1;
     }
-    this->painSoundMonster2.setBuffer(painSoundBufMonster2); 
-    if (!this->painSoundBufMonster2.loadFromFile("Sounds/monster2.wav"))
-    {
+    this->screamMonster1.setBuffer(screamMonster1Buf);
+
+    // Set monster2 sound
+    if (!this->screamMonster2Buf.loadFromFile("Sounds/monster2.wav")){
         std::cerr << "The file for monster2's scream is not found" << std::endl ;
         return -1;
     }
-    this->gunshotSound.setBuffer(gunshotSoundBuf); 
+    this->screamMonster2.setBuffer(screamMonster2Buf);
+
+    
     if (!this->font.loadFromFile("Fonts/arial.ttf"))
     {
         std::cerr << "The font was not found" << std::endl ;
@@ -59,9 +67,12 @@ void Game::initWindow()
             - res
             - fps
     */
-    this->videoMode.height = resY ; 
-    this->videoMode.width = resX ; 
-    this->window = new sf::RenderWindow(this->videoMode, "Aim Training", sf::Style::Titlebar | sf::Style::Close);
+
+    GetDesktopResolution(this->resX, this->resY);
+    this->videoMode.height = this->resY ; 
+    this->videoMode.width = this->resX ; 
+    // sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize
+    this->window = new sf::RenderWindow(this->videoMode, "Aim Training", sf::Style::Fullscreen);
     this->window->setFramerateLimit(fps_max); //max_fps
 }
 
@@ -209,7 +220,7 @@ void Game::shootingLogic(bool isleftClickPressed)
    sf::Rect<float> rectMonster1Bounds,rectMonster2Bounds;
     if(isleftClickPressed && !isLeftClickActive) // Fire the shot only if the mouse button was not pressed before
     {  
-        this->gunshotSound.play();
+        this->gunshot.play();
         isLeftClickActive = true ;
         sf::Vector2i mousePos = sf::Mouse::getPosition(*this->window); // Get the current mouse position
         sf::Vector2f floatMousePos(static_cast<float>(mousePos.x),static_cast<float>(mousePos.y));
@@ -222,13 +233,13 @@ void Game::shootingLogic(bool isleftClickPressed)
             rectMonster2Bounds = sf::Rect(monster2Bounds.left, monster2Bounds.top, monster2Bounds.width, monster2Bounds.height);
             if(rectMonster1Bounds.contains(floatMousePos))
             {
-                this->painSoundMonster1.play();
+                this->screamMonster1.play();
                 this->score++; 
                 respawnEnemy(i,1); 
             }
             if(rectMonster2Bounds.contains(floatMousePos))
             {
-                this->painSoundMonster2.play();
+                this->screamMonster2.play();
                 this->score++; 
                 respawnEnemy(i,2); 
             }
@@ -305,6 +316,9 @@ void Game::renderEnemies()
 
 int Game::hash()
 {
+    /*
+    A hash function to get a fast random number generator
+     */
     static int a = std::rand(); // seed rnd number generator (only done once)
     a = (a ^ 61) ^ (a >> 16);
     a = a + (a << 3);
@@ -312,4 +326,20 @@ int Game::hash()
     a = a * 0x27d4eb2d;
     a = a ^ (a >> 15);
     return a;
+}
+
+// Get the horizontal and vertical screen sizes in pixel
+void GetDesktopResolution(int& horizontal, int& vertical)
+{
+    SetProcessDPIAware();
+    RECT desktop;
+    // Get a handle to the desktop window
+    const HWND hDesktop = GetDesktopWindow();
+    // Get the size of screen to the variable desktop
+    GetWindowRect(hDesktop, &desktop);
+    // The top left corner will have coordinates (0,0)
+    // and the bottom right corner will have coordinates
+    // (horizontal, vertical)
+    horizontal = desktop.right;
+    vertical = desktop.bottom;
 }

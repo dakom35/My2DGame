@@ -42,11 +42,11 @@ class Game
         float fps ; // fps calculated with 1 frame
         float avg_fps ; // average fps measure performed on multiple frames,
                         // a few instructions are ignored => increases inacurracy
-        sf::SoundBuffer gunshotSoundBuf; // gun firing sound
-        sf::SoundBuffer painSoundBufMonster1,painSoundBufMonster2; // death screams of the monsters
+        sf::SoundBuffer gunshotBuf; // gun firing sound
+        sf::SoundBuffer screamMonster1Buf,screamMonster2Buf; // death screams of the monsters
         sf::SoundBuffer music1Buf ; 
-        sf::Sound gunshotSound; // sound of firing weapon
-        sf::Sound painSoundMonster1,painSoundMonster2 ; // sound of the enemy dying
+        sf::Sound gunshot; // sound of firing weapon
+        sf::Sound screamMonster1,screamMonster2 ; // sound of the enemy dying
         sf::Sound music1 ; // music you hear all the time
         std::chrono::high_resolution_clock::time_point start; // for fps measurement
         std::chrono::high_resolution_clock::time_point end; // for fps measurement
@@ -94,4 +94,11 @@ class Game
             void renderHUD(); 
             void renderEnemies();
 };
+
+
+// useful functions I don't know where to put yet
+void GetDesktopResolution(int& horizontal, int& vertical);
+
+
+
 #endif // GAME_H
